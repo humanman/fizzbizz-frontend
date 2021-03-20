@@ -14,6 +14,7 @@ function retreiveWeb3PubAddr(callback, addr, company) {
     // prompt user to add web3 extension
     // display alt login method
   }
+  return this
 }
 
 function dispatchWeb3PubAddr(addr, company) {
