@@ -1,9 +1,13 @@
 import React, { useState } from "react";
-import ReactDOM from "react-dom";
+// import ReactDOM from "react-dom";
 import ReactDataGrid from "react-data-grid";
-import { Menu } from "react-data-grid-addons";
+// import { Menu } from "react-data-grid-addons";
+// const { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } = Menu;
 
-const { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } = Menu;
+
+
+var qrData
+
 
 const defaultColumnProperties = {
   sortable: true,
@@ -24,6 +28,8 @@ function Grid() {
     { col0: '6:00' },
   ])
 
+  const [qr, setQr] = useState(qrData)
+
   const defaultColumnProperties = {
     width: 120
   };
@@ -42,6 +48,8 @@ function Grid() {
       { name: 'C10', key: 'col10'},
   ].map(c => ({ ...c, ...defaultColumnProperties }));
 
+
+
   return (
     <div style={{ padding: '50px' }}>
       <ReactDataGrid
@@ -56,6 +64,7 @@ function Grid() {
           onComplete: args => console.log(data)
         }}
       />
+      <div><img src={qr} /></div>
     </div>
   )
 }
