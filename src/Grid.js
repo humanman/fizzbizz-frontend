@@ -4,6 +4,7 @@ import ReactDataGrid from "react-data-grid";
 // import { Menu } from "react-data-grid-addons";
 // const { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } = Menu;
 
+// BY THE HOUR! 
 
 
 var qrData
@@ -33,6 +34,10 @@ function Grid() {
   const defaultColumnProperties = {
     width: 120
   };
+  
+  // fetch bookings for current day. filter by company
+  // compare bookingIds with those returned from user login
+  // on booking creation return all bookings to update table
 
   const columns = [
       { name: 'TIME',key: 'col0' },
@@ -48,7 +53,25 @@ function Grid() {
       { name: 'C10', key: 'col10'},
   ].map(c => ({ ...c, ...defaultColumnProperties }));
 
+  function selectionHandler() {
+    // on start
+      // set current col state based on key -> col3
+      // if selection is mostly on a booked panel open info about meeting
+    // on complete
+   
+      // if panel overlaps existing panel round up/down until clean
+      // confirm panel is a new booking
+      // filter data to match current col
+      // style selected panel as active-edit
+      // confirm booking start/end
+      // execute create booking 
+    
+    
+    // disallow x-axis selection
+       // check that keys are the same -> col3
 
+    
+  }
 
   return (
     <div style={{ padding: '50px' }}>

@@ -1,17 +1,47 @@
 import React from 'react';
 import './App.css';
-import './Grid.css';
-import Grid from './Grid';
-import Login from './Login'
+import { Link } from 'react-router'
+import { HiddenOnlyAuth, VisibleOnlyAuth } from './util/wrappers.js'
 
-function App() {
+// UI Components
+import LoginButtonContainer from './user/ui/loginbutton/LoginButtonContainer'
+import LogoutButtonContainer from './user/ui/logoutbutton/LogoutButtonContainer'
+
+// Styles
+import './css/oswald.css'
+import './css/open-sans.css'
+import './css/pure-min.css'
+import './App.css'
+
+function App(props) {
+  const OnlyAuthLinks = VisibleOnlyAuth(() =>
+    <span>
+      <li className="pure-menu-item">
+        <Link to="/dashboard" className="pure-menu-link">Dashboard</Link>
+      </li>
+      <li className="pure-menu-item">
+        <Link to="/profile" className="pure-menu-link">Profile</Link>
+      </li>
+      <LogoutButtonContainer />
+    </span>
+  )
+
+  const OnlyGuestLinks = HiddenOnlyAuth(() =>
+    <span>
+      <LoginButtonContainer />
+    </span>
+  )
+
   return (
     <div className="App">
-      <header className="App-header">
-        <p>FizzBizz Scheduler</p>
-      </header>
-      <Login/>
-      <Grid/>
+      <nav className="navbar pure-menu pure-menu-horizontal">
+        <Link to="/" className="pure-menu-heading pure-menu-link">FizzBizz Booking</Link>
+        <ul className="pure-menu-list navbar-right">
+          <OnlyGuestLinks />
+          <OnlyAuthLinks />
+        </ul>
+      </nav>
+      {props.children}
     </div>
   );
 }

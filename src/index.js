@@ -1,17 +1,31 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { Router, Route, IndexRoute, browserHistory } from 'react-router'
+import { Provider } from 'react-redux'
+import { syncHistoryWithStore } from 'react-router-redux'
+import { UserIsAuthenticated } from './util/wrappers.js'
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+// Layouts
+import App from './App'
+import Home from './layouts/home/Home'
+import Dashboard from './layouts/dashboard/Dashboard'
+import Profile from './user/layouts/profile/Profile'
+
+// Redux Store
+import store from './store'
+
+const history = syncHistoryWithStore(browserHistory, store)
+
+ReactDOM.render((
+  <Provider store={store}>
+    <Router history={history}>
+      <Route path="/" component={App}>
+        <IndexRoute component={Home} />
+        <Route path="dashboard" component={UserIsAuthenticated(Dashboard)} />
+        <Route path="profile" component={UserIsAuthenticated(Profile)} />
+      </Route>
+    </Router>
+  </Provider>
+),
   document.getElementById('root')
-);
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+)
