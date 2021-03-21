@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
 function Profile (props){
-
-  const [authData, setAuthData] = useState(...props)
+  const [authData, setAuthData] = useState({...props})
 
   useEffect(()=> {
     setAuthData(props)
