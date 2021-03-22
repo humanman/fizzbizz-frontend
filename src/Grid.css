@@ -79,3 +79,12 @@
   content: attr(data-count);
   display: block;
 }
+
+.booked-status {
+  height: 35px;
+  width: 120px;
+}
+
+.booked {
+  background: #999;
+}
