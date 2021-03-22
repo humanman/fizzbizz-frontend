@@ -3,6 +3,7 @@ import TimeField from 'react-simple-timefield';
 
 
 function BookingForm(props) {
+
   const handleSubmit = (e) => {
     e.preventDefault();
     // validate
@@ -39,7 +40,7 @@ function BookingForm(props) {
       <input
         className='submitButton'
         type='submit'
-        value='Log Chore'
+        value='Complete Booking'
       />
     </form>
   )

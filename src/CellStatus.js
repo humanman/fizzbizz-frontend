@@ -6,7 +6,7 @@ function CellStatus(props) {
   const [mouseDown, setMouseDown] = useState(false);
   // const bookingId = useState(state => state.booking)
 
-  const { status, id, col, row } = props
+  const { status, id, col, row, who='other' } = props
   // set a booked status to useSelector so it's tied to a global state
   
   // group selected cell to other bookingIds and select the bookingID
@@ -34,7 +34,7 @@ function CellStatus(props) {
       <div 
         booking-id="null"
         data-info={`${status}`} 
-        className='booked-status' 
+        className={`status-${status}-${who}` }
         data-lookup={id} 
         col-name={col}
         row-id={row} 

@@ -85,6 +85,18 @@
   width: 120px;
 }
 
-.booked {
-  background: #999;
+.status-booked-user {
+  background: rgb(57, 226, 147);
+  height: 38px;
+  width: 120px;
+  margin-top: -1px;
+  margin-bottom: -1px;
+}
+
+.status-booked-other {
+  background: rgb(113, 114, 116);
+}
+
+.status-booked-pending {
+  background: rgb(228, 230, 142);
 }
