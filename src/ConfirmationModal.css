@@ -1,0 +1,53 @@
+  .modal-outer-wrapper {
+    /* position: absolute;
+    bottom: 5%;
+    left: 50%;
+    margin-right: -50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    height: 30vw;
+    width: 30vw; */
+    color: #fff;
+    background: #0c1a2b;
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+  }
+
+  .modal-inner-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .confirm-btn {
+    background: #0c1a2b;
+    color: #fff;
+    padding: 5px;
+    border: none;
+  }
+
+  .confirm-btn:hover {
+    background: #233e5e;
+    outline: 0;
+  }
+
+  .info-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .m-hide {
+    visibility: hidden;
+  }
+
+  .m-show {
+    visibility: visible;
+  }

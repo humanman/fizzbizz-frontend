@@ -30,11 +30,15 @@ const statusReducer = (state = initialState(), action) => {
   }
 
   if (action.type === 'STATUS_HOLD') {
-    state[action.row][action.key].status = 'pending'
+    for (let act of action.slots) {
+      state[act.row][act.key].status = 'pending'
+    }
   }
 
   if (action.type === 'STATUS_UNBOOKED') {
-    state[action.row][action.key].status = 'free'
+    for (let act of action.slots) {
+      state[act.row][act.key].status = 'free'
+    }
   }
 
   return state

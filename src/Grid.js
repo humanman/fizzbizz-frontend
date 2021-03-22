@@ -3,13 +3,8 @@ import ReactDOM from "react-dom";
 import ReactDataGrid from "react-data-grid";
 import { useDispatch, useSelector } from 'react-redux';
 import CellStatus from './CellStatus';
-
+import './Grid.css';
 // BY THE HOUR! 
-
-const defaultColumnProperties = {
-  sortable: true,
-  width: 120
-};
 
 function buildRows(compName, options) {
   let statusObjArr = []
@@ -27,15 +22,12 @@ function buildRows(compName, options) {
     { col0: '6:00' },
   ]
   if (options) {
-    console.log('populationg from store')
-
     let idx = 0
     let len = rowIdxArr.length
     while(idx <= len) {
       rowIdxArr[idx] = { ...rowIdxArr[idx], ...options.status[idx]}
       idx++
     }
-    console.log('initialState', rowIdxArr)
   } else {
 
     let idx = 0
@@ -63,13 +55,16 @@ function Grid() {
   const [startRow, setStartRow] = useState({idx:1,rowIdx:1})
   const [cellRange, setCellRange] = useState([])
   const availability = useSelector(state => state.status)
-  const gridData = buildRows('C', {status: availability})
+  const authData = useSelector(state => state.user.data)
+  const comp = authData.company.charAt(0) || 'P'
+  const gridData = buildRows(comp, {status: availability})
+  const dialog = useSelector(state => state.dialog)
   const [data, setData] = useState(gridData)
-
   const dispatch = useDispatch()
 
   const defaultColumnProperties = {
-    width: 120
+    // width: 120
+    // width: '12%'
   };
   
   // fetch bookings for current day. filter by company
@@ -98,18 +93,14 @@ function Grid() {
 
 
   function selectHandlerStart(start) {
-    console.log('start ', start)
     if (start.idx == 0 ) return false
     setColumn(start.idx)
-  
     setStartRow(start.rowIdx)
-
   }
 
   function cellSelected(cell) {
     // check store based on cell.idx-cell.rowIdx
     if (cell.idx == column) {
-      // console.log('cellRange now ', cellRange)
       return setCellRange([...cellRange, cell])
     }
   }
@@ -149,8 +140,12 @@ function Grid() {
   }
 
   function selectHandlerComplete(rangeObj) {
+    // initial validation
+    if (!rangeObj) return false
     setColumn(rangeObj.topLeft.idx)
     let rangeSelected = getRange(rangeObj)
+    if (rangeSelected[0].col == 0) return false
+    console.log('rangeObj ', rangeObj)
     // range is topLeft -> bottomRight
     // panel will create new panel on first range of available timeslots
     // panel will highlight
@@ -165,9 +160,11 @@ function Grid() {
     rangeSelected = prepSelectedRange(rangeSelected)
     let filteredRangeByAvailability = checkRangeAvailability(rangeSelected)
 
-    dispatch({ type: 'STATUS_BOOKED', slots: filteredRangeByAvailability })
+    dispatch({ type: 'STATUS_HOLD', slots: filteredRangeByAvailability })
+    dispatch({ type: 'DASH_SHOW_DIALOG'})
+    dispatch({ type: 'BOOKING_HAS_CURRENT_RANGE', currentSelection: filteredRangeByAvailability })
     
-    const newData = buildRows('C', { status: availability })
+    const newData = buildRows(comp, { status: availability })
     setData(newData)
 
     return confirmBookingRequest()
@@ -175,21 +172,20 @@ function Grid() {
   }
 
   function confirmBookingRequest() {
-
-    const newData = buildRows('C', { status: availability })
+   
+    const newData = buildRows(comp, { status: availability })
     setData(newData)
   }
 
   return (
-    <div style={{ padding: '50px' }}>
+    <div style={{ padding: '5%' }}>
       <ReactDataGrid
-        // getCellActions={getCellActions}
         columns={columns}
         rows={data}
         rowKey={data}
         rowGetter={i => data[i]}
         rowsCount={10}
-        minHeight={500}
+        minHeight={400}
         cellRangeSelection={{
           onStart: args => selectHandlerStart(args.startCell),
           onComplete: args => selectHandlerComplete(args)

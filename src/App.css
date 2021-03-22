@@ -18,8 +18,9 @@ pre {
 
 .container {
   box-sizing: border-box;
-  width: 100%;
+  width: 85%;
   padding: 45px 20px;
+  margin: auto;
 }
 
 .pure-button-primary {
