@@ -16,50 +16,29 @@ const initialState = () => {
 
   return outputArr
 }
-export function selectAvailableSlots(selectionArr) {
-  return  {
-    type: 'CHECK_AVAILABLE',
-    ...selectionArr
-  }
-}
+
+
 
 const statusReducer = (state = initialState(), action) => {
-  let outputArr = []
+  // this grabs available panel 
 
-    return [
-      ...state,
-      ...outputArr
-    ]
+  if (action.type === 'STATUS_BOOKED') {
+    for (let act of action.slots) {
+      state[act.row][act.key].status = 'booked'
+    }
+
+  }
+
+  if (action.type === 'STATUS_HOLD') {
+    state[action.row][action.key].status = 'pending'
+  }
+
+  if (action.type === 'STATUS_UNBOOKED') {
+    state[action.row][action.key].status = 'free'
+  }
+
+  return state
 }
-// const statusReducer = (state = initialState(), action) => {
-//   // this grabs available panel 
-//   console.log('initialState ', state, action)
-//   if (action.type === 'CHECK_AVAILABLE') {
-//     // look up individual cell 
-//     let outputArr = []
-//     for (const [idx, obj] of action.arr.entries()) {
-//       outputArr.push(state.find(c => c.col == obj.col && c.row == obj.row))
-//     }
-
-//     return [
-//       ...outputArr
-//     ]
-//   }
-
-//   if (action.type === 'STATUS_BOOKED') {
-//     return Object.assign({}, state, {
-//       status: action.payload
-//     })
-//   }
-
-//   if (action.type === 'STATUS_UNBOOKED') {
-//     return Object.assign({}, state, {
-//       status: 'free'
-//     })
-//   }
-
-//   return state
-// }
 
 
 
