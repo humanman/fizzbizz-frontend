@@ -1,4 +1,3 @@
-import { web3Eth } from './../../../util/connectors.js'
 import { browserHistory } from 'react-router'
 import axios from 'axios'
 import '@metamask/legacy-web3'
@@ -31,7 +30,6 @@ function userLoggedIn(user) {
 }
 
 function handleSignMessage(obj) {
-  console.log('args',obj)
   let nonce = obj.nonce
   let pubAddr = obj.pubAddr
   return new Promise((resolve, reject) =>
@@ -59,6 +57,7 @@ function handleAuthenticate({ pubAddr, signature }) {
   
 export function loginUser() {
   // window.web3.personal.sign(web3.fromUtf8("Welcome to FizzBizz Booking!"), web3.eth.coinbase, console.log);  
+  if (!window.web3) window.etherium.enable() 
   const pubAddr = window.web3.eth.coinbase.toLowerCase()
   return function(dispatch) {
     // check publicaddress
