@@ -13,22 +13,26 @@
 }
 
 .booked-status {
-  height: 35px;
+  height: 38px;
   width: 120px;
+  max-width: 100%;
+  font-size: 9px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all .3s linear;
 }
 
 .status-booked-user {
   background: rgb(57, 226, 147);
-  height: 38px;
-  width: 120px;
   margin-top: -1px;
   margin-bottom: -1px;
+
 }
 
 .status-booked-other {
   background: rgb(113, 114, 116);
-  height: 38px;
-  width: 120px;
   margin-top: -1px;
   margin-bottom: -1px;
 }
@@ -36,10 +40,12 @@
 .status-pending-user,
 .status-pending-other {
   background: rgb(239, 243, 13);
-  height: 38px;
-  width: 120px;
   margin-top: -1px;
   margin-bottom: -1px;
+}
+
+.panel-selected {
+  opacity: .4;
 }
 
 /* TODO: fix issue through component */

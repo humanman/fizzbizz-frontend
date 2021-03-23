@@ -1,12 +1,4 @@
-  .modal-outer-wrapper {
-    /* position: absolute;
-    bottom: 5%;
-    left: 50%;
-    margin-right: -50%;
-    -webkit-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-    height: 30vw;
-    width: 30vw; */
+  /* .modal-outer-wrapper {
     color: #fff;
     background: #0c1a2b;
     font-family: 'Oswald', 'Arial Narrow', sans-serif;
@@ -16,12 +8,95 @@
     display: flex;
     justify-content: center;
     align-items: center;
-  }
+    /* margin: auto;
+    width: 30vw;
+    padding-bottom: 15px; */
+  /* }
 
   .modal-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
+  } */ 
+
+  /* .customOverlay {
+    width: 100vw;
+    height: 100vh;
+    background: rgba(36, 123, 160, 0.7);
+  } */
+
+  .modal-overlay {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background:rgba(12, 26, 43, 0.9);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .customModal, .modal-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: auto;
+    max-width: 500px;
+    width: 100%;
+    color: #fff;
+    background:rgba(12, 26, 43, 0.9);
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+    padding: 25px;
+    z-index: 10;
+  }
+  
+  .modal-container label p {
+    text-align: center;
+  }
+
+  .modal-container input {
+    background-color: rgba(166, 173, 182, 0.4);
+    color:#fff
+  }
+
+  .modal-container > p {
+    margin: 10px;
+  }
+
+  .checkbox-container {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+  
+  .checbox-header {
+    justify-self: center;
+    width: 100%;
+  }
+
+  .input-container {
+    margin-bottom: 15px;
+  }
+
+  .modal-container .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+  }
+
+  .modal-container .container > p {
+    margin-right: 10px;
+  }
+
+  .btn-wrapper {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
   }
 
@@ -30,11 +105,22 @@
     color: #fff;
     padding: 5px;
     border: none;
+    align-self: flex-end;
+    padding: 10px;
   }
 
   .confirm-btn:hover {
     background: #233e5e;
     outline: 0;
+  }
+  
+  .confirm-btn:focus {
+    outline: 0;
+  }
+
+  .close-icon {
+    color: #fff;
+    fill: #fff;
   }
 
   .info-container {
@@ -51,3 +137,40 @@
   .m-show {
     visibility: visible;
   }
+
+  
+
+
+@keyframes customEnterOverlayAnimation {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes customLeaveOverlayAnimation {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+
+@keyframes customEnterModalAnimation {
+  0% {
+    transform: scale(0.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes customLeaveModalAnimation {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0.2);
+  }
+}

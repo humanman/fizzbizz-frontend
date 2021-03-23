@@ -10,7 +10,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onLogoutUserClick: (event) => {
       event.preventDefault();
-
+      sessionStorage.clear();
       dispatch(logoutUser())
     }
   }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import ReactDataGrid from "react-data-grid";
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,8 +7,9 @@ import './Grid.css';
 // BY THE HOUR! 
 
 function buildRows(compName, options) {
-  let statusObjArr = []
-  let outputArr = []
+  console.log('running build rows')
+  // let statusObjArr = []
+  // let outputArr = []
   let rowIdxArr = [
     { col0: '9:00' },
     { col0: '10:00'},
@@ -29,14 +30,14 @@ function buildRows(compName, options) {
       idx++
     }
   } else {
-
+    console.log('no options')
     let idx = 0
     while(idx <= 10) {
       // simple 10X10 matrix
       for (let i = 1; i <= 10; i++) {
         let leadingZero = i < 10 ? '0' : ''
         let colKey = `col${i}`
-        rowIdxArr[idx] = { ...rowIdxArr[idx], [`${colKey}`]: { status: 'free', colKey: `${colKey}`, rowIdx: `${i}`, dataLookup: `${colKey}-idx${i}`, colName: `${compName}${leadingZero}${i}` } }
+        rowIdxArr[idx] = { ...rowIdxArr[idx], [`${colKey}`]: { status: 'free', colKey: `${colKey}`, rowIdx: `${i}`, dataLookup: `${colKey}-idx${i}`, colName: `${compName}${leadingZero}${i}` } ,booking:null,bookingTitle:null, organizer:null}
       }
       idx++
     }
@@ -56,39 +57,76 @@ function Grid() {
   const [cellRange, setCellRange] = useState([])
   const availability = useSelector(state => state.status)
   const authData = useSelector(state => state.user.data)
+  const bookings = useSelector(state => state.user.booking)
   const comp = authData.company.charAt(0) || 'P'
-  const gridData = buildRows(comp, {status: availability})
-  const dialog = useSelector(state => state.dialog)
+  const [gridData, setGridData] = useState(buildRows(comp, {status: availability}))
+  // const dialog = useSelector(state => state.dialog)
+  const confirm = useSelector(state => state.dialog.confirm)
+
   const [data, setData] = useState(gridData)
+  const [hide, setHide] = useState(confirm)
   const dispatch = useDispatch()
 
   const defaultColumnProperties = {
     // width: 120
     // width: '12%'
   };
+
+
+  // handle panel selection 
+  function selectPanel(e) {
+    let currentActivePanel = document.querySelectorAll('.panel-selected');
+    [].forEach.call(currentActivePanel, function (el) {
+      el.classList.remove('panel-selected');
+    });
+    let bookingId = e.target.getAttribute('booking')
+    let panel = document.querySelectorAll( `[booking=${bookingId}]`);
+    // change color
+    
+    panel.forEach((el) => { 
+      el.classList.add('panel-selected') 
+    })
+    // if organizer is current user then offer cancel (for now)
+  }
+
+  function unSelectPanel(cell) {
+    let bookingId = cell.getAttribute('booking')
+    let panel = document.querySelectorAll(`[booking=${booking}]`);
+    // change color
+  
+    panel.forEach((el) => {
+      el.classList.remove('panel-selected')
+    })
+  }
+
+  useEffect(() => {
+    let cells = document.getElementsByClassName('booked-status')
+    for (var i = 0; i < cells.length; i++) {
+      cells[i].addEventListener('click', selectPanel, false);
+    }
+  })
   
   // fetch bookings for current day. filter by company
-  // compare bookingIds with those returned from user login
+  // compare bookings with those returned from user login
   // on booking creation return all bookings to update table
 
-  const AvailabilityFormatter = ({value}) => {
-    return <CellStatus {...value}/>
+  const AvailabilityFormatter = ({value, options}) => {
+    return <CellStatus {...value} />
   };
-
 
   const cellHelpers = { formatter: AvailabilityFormatter }
   const columns = [
       { name: 'TIME',key: 'col0'},
-      { name: 'CO1', key: 'col1' , ...cellHelpers},
-      { name: 'CO2', key: 'col2' , ...cellHelpers},
-      { name: 'CO3', key: 'col3' , ...cellHelpers},
-      { name: 'CO4', key: 'col4' , ...cellHelpers},
-      { name: 'CO5', key: 'col5' , ...cellHelpers},
-      { name: 'CO6', key: 'col6' , ...cellHelpers},
-      { name: 'CO7', key: 'col7' , ...cellHelpers},
-      { name: 'CO8', key: 'col8' , ...cellHelpers},
-      { name: 'CO9', key: 'col9' , ...cellHelpers},
-      { name: 'C10', key: 'col10', ...cellHelpers }
+      { name: `${comp}O1`, key: 'col1' , ...cellHelpers},
+      { name: `${comp}O2`, key: 'col2' , ...cellHelpers},
+      { name: `${comp}O3`, key: 'col3' , ...cellHelpers},
+      { name: `${comp}O4`, key: 'col4' , ...cellHelpers},
+      { name: `${comp}O5`, key: 'col5' , ...cellHelpers},
+      { name: `${comp}O6`, key: 'col6' , ...cellHelpers},
+      { name: `${comp}O7`, key: 'col7' , ...cellHelpers},
+      { name: `${comp}O8`, key: 'col8' , ...cellHelpers},
+      { name: `${comp}O9`, key: 'col9' , ...cellHelpers},
+      { name: `${comp}10`, key: 'col10', ...cellHelpers }
   ].map(c => ({ ...c, ...defaultColumnProperties }));
 
 
@@ -126,7 +164,6 @@ function Grid() {
         statusArr.push(availability[parseInt(slot.row)][slot.key])
       }
     }
-    console.log('found', statusArr)
     return statusArr
   }
 
@@ -140,12 +177,13 @@ function Grid() {
   }
 
   function selectHandlerComplete(rangeObj) {
+    setHide(confirm)
     // initial validation
     if (!rangeObj) return false
     setColumn(rangeObj.topLeft.idx)
     let rangeSelected = getRange(rangeObj)
     if (rangeSelected[0].col == 0) return false
-    console.log('rangeObj ', rangeObj)
+
     // range is topLeft -> bottomRight
     // panel will create new panel on first range of available timeslots
     // panel will highlight
@@ -155,26 +193,24 @@ function Grid() {
     if (rangeObj.topLeft.idx == rangeObj.bottomRight.idx && rangeObj.topLeft.rowIdx == rangeObj.bottomRight.rowIdx) {
       // it's a single hour booking
       console.log('attempting to book single hour')
+
     } 
     // lets create objects for each cell in range and check availability in our store
     rangeSelected = prepSelectedRange(rangeSelected)
     let filteredRangeByAvailability = checkRangeAvailability(rangeSelected)
+    if (filteredRangeByAvailability.length) {
 
-    dispatch({ type: 'STATUS_HOLD', slots: filteredRangeByAvailability })
-    dispatch({ type: 'DASH_SHOW_DIALOG'})
-    dispatch({ type: 'BOOKING_HAS_CURRENT_RANGE', currentSelection: filteredRangeByAvailability })
-    
-    const newData = buildRows(comp, { status: availability })
-    setData(newData)
+      dispatch({ type: 'DASH_SHOW_DIALOG'})
+      dispatch({ type: 'BOOKING_HAS_CURRENT_RANGE', currentSelection: filteredRangeByAvailability })
 
-    return confirmBookingRequest()
+      // return confirmBookingRequest()
+    }
 
   }
 
   function confirmBookingRequest() {
-   
-    const newData = buildRows(comp, { status: availability })
-    setData(newData)
+    setGridData(buildRows(comp, { status: availability }))
+    return setData(gridData)
   }
 
   return (
@@ -186,11 +222,11 @@ function Grid() {
         rowGetter={i => data[i]}
         rowsCount={10}
         minHeight={400}
-        cellRangeSelection={{
-          onStart: args => selectHandlerStart(args.startCell),
-          onComplete: args => selectHandlerComplete(args)
+          cellRangeSelection={{
+            onStart: args => selectHandlerStart(args.startCell),
+            onComplete: args => selectHandlerComplete(args)
         }}
-      />
+        />
     </div>
   )
 }

@@ -7,37 +7,44 @@ const initialState = () => {
     let outputObj = {}
     for (let innerCount = 1; innerCount <= 10; innerCount++) {
       let currOuterCount = count
-      outputObj[`col${innerCount}`] = { id: `${currOuterCount}-${innerCount}`, status: 'free', col: innerCount, row: currOuterCount, key: `col${innerCount}`}
+      outputObj[`col${innerCount}`] = { id: `${currOuterCount}-${innerCount}`, status: 'free', col: innerCount, row: currOuterCount, key: `col${innerCount}`, booking: null, bookingtitle: null, organizer: null}
     }
     outputArr.push(outputObj)
     count++
   }
-  
 
   return outputArr
 }
 
 
-
 const statusReducer = (state = initialState(), action) => {
+
   // this grabs available panel 
 
   if (action.type === 'STATUS_BOOKED') {
     for (let act of action.slots) {
-      state[act.row][act.key].status = 'booked'
+      state[act.row][act.key].status = 'booked' 
+      state[act.row][act.key].who = 'user' 
     }
-
   }
 
   if (action.type === 'STATUS_HOLD') {
-    for (let act of action.slots) {
+    for (const [i, act] of action.slots.entries()) {
       state[act.row][act.key].status = 'pending'
+      state[act.row][act.key].who = 'user'
+      state[act.row][act.key].bookingtitle = action.metadata.title
+      state[act.row][act.key].organizer = action.metadata.user
+      state[act.row][act.key].booking = action.metadata.booking
     }
   }
 
   if (action.type === 'STATUS_UNBOOKED') {
     for (let act of action.slots) {
       state[act.row][act.key].status = 'free'
+      state[act.row][act.key].who = 'other'
+      state[act.row][act.key].bookingtitle = ""
+      state[act.row][act.key].organizer = ""
+      state[act.row][act.key].booking = ""
     }
   }
 

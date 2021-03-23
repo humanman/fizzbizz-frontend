@@ -28,7 +28,7 @@ function App(props) {
 
   const OnlyGuestLinks = HiddenOnlyAuth(() =>
     <span>
-      <LoginButtonContainer />
+      <LoginButtonContainer isNav={true} />
     </span>
   )
 

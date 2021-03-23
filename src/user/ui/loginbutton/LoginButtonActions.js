@@ -1,4 +1,5 @@
 import { browserHistory } from 'react-router'
+import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios'
 import '@metamask/legacy-web3'
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL
@@ -56,6 +57,10 @@ function handleAuthenticate({ pubAddr, signature }) {
 }
   
 export function loginUser() {
+  let loginData =  {}
+  loginData.localDataUser = sessionStorage.getItem('fizzbizz-username')
+  loginData.localDataCompany = sessionStorage.getItem('fizzbizz-companyname')
+ 
   // window.web3.personal.sign(web3.fromUtf8("Welcome to FizzBizz Booking!"), web3.eth.coinbase, console.log);  
   if (!window.web3) window.etherium.enable() 
   const pubAddr = window.web3.eth.coinbase.toLowerCase()
@@ -67,7 +72,14 @@ export function loginUser() {
       })
       .then(user => {
         user = JSON.parse(JSON.stringify(user.data))
+        if (loginData.localDataCompany || loginData.localDataUser) {
+          if (loginData.localDataUser && user.username == 'web3User') user.username = loginData.localDataUser
+          if (loginData.localDataCompany) user.company = loginData.localDataCompany
+        }
+
         dispatch(userLoggedIn(user))
+        dispatch({ type: 'DASH_HIDE_DIALOG' })
+
         // Used a manual redirect here as opposed to a wrapper.
         // This way, once logged in a user can still access the home page.
         var currentLocation = browserHistory.getCurrentLocation()
