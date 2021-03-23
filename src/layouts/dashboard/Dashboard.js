@@ -46,11 +46,16 @@ function Dashboard (props) {
     setValue("confirming");
     let title = window.sessionStorage.getItem('fizzbizz-meetingname')
     let user = window.sessionStorage.getItem('fizzbizz-username')
-    let booking= 'booking' + Math.floor(Math.random() * 10 + 1 )
+    let company = window.sessionStorage.getItem('fizzbizz-companyname')
+    // bookingid will be concactenation of company and datalookups of first to last 
+    // get/create starttime
+    // get/create endtime
+    let booking = 'booking' + Math.floor(Math.random() * 10 + 1 )
     // I don't think this fn actually works. 
     let pendingBookings = currentSelection.map(slot => {
       return Object.assign({}, slot, { bookingtitle: title, organizer: user, booking} )
     })
+
   
     dispatch({ type: 'STATUS_HOLD', slots: pendingBookings , metadata:{title, user, booking }})
     dispatch({ type: 'DASH_HIDE_DIALOG' })
