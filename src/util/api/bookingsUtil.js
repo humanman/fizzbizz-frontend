@@ -19,7 +19,7 @@ const timeMap = {
 const handleCurrentBookings = (fetchedBookings) => {
   let obj = JSON.parse(JSON.stringify(fetchedBookings))
 
-  console.log('fetc ', fetchedBookings[0], typeof fetchedBookings)
+  
   if (fetchedBookings == undefined || fetchedBookings.length == 0) return false
   const company = window.sessionStorage.getItem('fizzbizz-companyname')
   const currentUser = window.sessionStorage.getItem('fizzbizz-username')
@@ -83,10 +83,7 @@ const handleCurrentBookings = (fetchedBookings) => {
 
 const addBooking = () => (req) => {
   const url = `${API_BASE_URL}/${env}/api/v1/booking/new`
-  // try/catch block validates user is logged in (pubAddress), and data is valid
-  // user must be the one on who booked as well!
-  // TODO: convert to axios interceptor to preprocess request
-  // try {
+
     return axios.post(url, {
         booking_id: req.booking_id,
         booking_name: req.booking_name, 
@@ -98,50 +95,27 @@ const addBooking = () => (req) => {
       })
       .then(response => response.config)
       .then(response => response ? handleCurrentBookings(response.data) : null)
-        // should be a fetch all response to update current bookings
-        // possibly need to transform into something status can use
-        // also - add status reducer to bookingReducer
-        // dispatch({ type: 'BOOKING_CREATE', payload: response.data });
-      
 
-  // } catch {
-    // preflight error // 'user address not found'
-  // }
 }
 
 const getBooking = () => (req={company, booking_id:null}) => {
   const url = `${API_BASE_URL}/${env}/api/v1/booking`
-  // try/catch block validates user is logged in (pubAddress), and data is valid
-  // TODO: convert to axios interceptor to preprocess request
-  // try {
   return axios.get(url, {
     params: {
       "booking_id": req.booking_id,
       "company": req.company
     }})
-    // .then(response => JSON.parse(JSON.stringify(response.data)))
-    .then(response => response ? handleCurrentBookings(response.data) : null)
-      // should be a fetch all response to update current bookings
-      // possibly need to transform into something status can use
-      // also - add status reducer to bookingReducer
-      // dispatch({ type: 'BOOKING_GET', payload: response.data });
+    .then(response => JSON.parse(response.data))
+    .then(response => handleCurrentBookings(response))
 
-  
-
-  // } catch {
-    // preflight error // 'user address not found'
-  // }
 }
 
 const updateBooking = () => (req) => {
   const url = `${API_BASE_URL}/${env}/api/v1/booking`
-  // try/catch block validates user is logged in (pubAddress), and data is valid
-  // user must be the one on who booked as well!
-  // TODO: convert to axios interceptor to preprocess request
-  // will delete old booking and create new booking
-  // TODO: address issue of latency between deleting and creating new booking
+
   try {
-    axios.put(url, {
+    axios.put(url, 
+      {
         old_booking_id: req.bookingOld,
         booking_id: req.bookingNew,
         booking_name: req.organizer, // pubAddress
@@ -151,10 +125,7 @@ const updateBooking = () => (req) => {
         end_time: req.endTime
       })
       .then(response => {
-        // should be a fetch all response to update current bookings
-        // possibly need to transform into something status can use
-        // also - add status reducer to bookingReducer
-        // dispatch({ type: 'BOOKING_UPDATE', payload: response.data });
+
       })
 
   } catch {
@@ -163,24 +134,20 @@ const updateBooking = () => (req) => {
 }
 
 const deleteBooking = () => (req) => {
-  const url = `${API_BASE_URL}/${env}/api/v1/booking/${booking_id}`
+  let bookingId = window.sessionStorage.getItem('selectedbooking')
+  
+  const url = `${API_BASE_URL}/${env}/api/v1/booking`
   // try/catch block validates user is logged in (pubAddress)
   // user must be the one on who booked as well!
   // TODO: convert to axios interceptor to preprocess request
   // will delete old booking and create new booking
   // TODO: address issue of latency between deleting and creating new booking
-  try {
-    axios.delete(url, { params: {"company": req.company}})
-      .then(response => {
-        // should be a fetch all response to update current bookings
-        // possibly need to transform into something status can use
-        // also - add status reducer to bookingReducer
-        // dispatch({ type: 'BOOKING_DELETE', payload: response.data });
-      })
 
-  } catch {
-    // preflight error // 'user address not found'
-  }
+  return axios.delete(url, { params: {"company": req.company, "booking_id": req.booking_id}})
+    .then(response => {
+      window.sessionStorage.removeItem('selectedbooking')
+    })
+
 }
 
 const bookingsUtil = {

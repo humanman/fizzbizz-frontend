@@ -46,7 +46,6 @@ const statusReducer = (state = initialState(), action) => {
   }
 
   if (action.type === 'STATUS_BLOCKED') {
-    console.log('payload block', action.slots)
     for (let act of action.slots) {
       state[act.row][act.key].status = 'booked' 
       state[act.row][act.key].who = 'other' 

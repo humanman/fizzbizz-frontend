@@ -4,16 +4,12 @@ import ReactDataGrid from "react-data-grid";
 import { useDispatch, useSelector } from 'react-redux';
 import CellStatus from './CellStatus';
 import './css/Grid.css';
-import bookingsUtil from './util/api/bookingsUtil'
-const getBookings = bookingsUtil.getBooking()
 
 const company = sessionStorage.getItem('fizzbizz-companyname')
 
 
 function buildRows(compName, options) {
   console.log('running build rows')
-  // let statusObjArr = []
-  // let outputArr = []
   let rowIdxArr = [
     { col0: '9:00' },
     { col0: '10:00'},
@@ -67,7 +63,6 @@ function Grid() {
   const [gridData, setGridData] = useState(buildRows(comp, {status: availability}))
 
 
-  // const dialog = useSelector(state => state.dialog)
   const confirm = useSelector(state => state.dialog.confirm)
 
   const [data, setData] = useState(gridData)
@@ -78,35 +73,46 @@ function Grid() {
     // width: 120
     // width: '12%'
   };
-  
 
-  // handle panel selection 
+
+  // // handle panel selection 
   function selectPanel(e) {
     let currentActivePanel = document.querySelectorAll('.panel-selected');
     [].forEach.call(currentActivePanel, function (el) {
       el.classList.remove('panel-selected');
     });
     let bookingId = e.target.getAttribute('booking')
+
+    // build currentselection that can dispatch to store to update current selection so if use deletes, the selection is available
+    console.log('booking ', bookingId)
     let isEditable = e.target.getAttribute('organizer') == currUser
     let panel = document.querySelectorAll( `[booking="${bookingId}"]`);
     // change color
-    
+    let panelDetails = []
     panel.forEach((el) => { 
+      console.log('element  ',el.getAttribute('row-id'))
       el.classList.add('panel-selected') 
+      let row = el.getAttribute('row-id')
+      let key = `col${el.getAttribute('col-name')}`
+      panelDetails.push(availability[parseInt(row)][key])
     })
 
+
     if (isEditable) {
-      dispatch({ type: 'DASH_SELECT_BOOKING' })
+
+      setTimeout(() => {
+        dispatch({ type: 'DASH_SELECT_BOOKING', bookingId})
+        dispatch({ type: 'BOOKING_HAS_CURRENT_RANGE', currentSelection: panelDetails })
+      })
+  
     }
-    
-    // if organizer is current user then offer cancel (for now)
+
   }
 
   function unSelectPanel(cell) {
     let bookingId = cell.getAttribute('booking')
     let panel = document.querySelectorAll(`[booking="${bookingId}"]`);
     // change color
-  
     panel.forEach((el) => {
       el.classList.remove('panel-selected')
     })
@@ -119,10 +125,6 @@ function Grid() {
     }
   })
   
-  // fetch bookings for current day. filter by company
-  // compare bookings with those returned from user login
-  // on booking creation return all bookings to update table
-
   const AvailabilityFormatter = ({value, options}) => {
     return <CellStatus {...value} />
   };

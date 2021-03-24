@@ -3,7 +3,6 @@ import ConfirmModal from './ConfirmationModal';
 import { useDispatch, useSelector } from 'react-redux';
 import bookingsUtil from './util/api/bookingsUtil'
 const getBookings = bookingsUtil.getBooking()
-// import '../../ConfirmationModal.css';
 // UI Components
 import LoginButtonContainer from './ui/loginbutton/LoginButtonContainer';
 
@@ -16,8 +15,6 @@ const Home = () => {
   const handleConfirm = (args) => {
     console.log('a ', args)
     dispatch(loginUser(args))
-    // const fetched = getBookings()
-    // return getBookings()
   }
 
   return(

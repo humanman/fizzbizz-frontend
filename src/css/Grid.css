@@ -5,6 +5,20 @@
 .react-grid-Cell {
   border-color: #bbb;
   border-width: 3px 1px;
+  border-left: 1px solid #888;
+}
+
+.react-grid-Cell[value="9:00"],
+.react-grid-Cell[value="10:00"],
+.react-grid-Cell[value="11:00"],
+.react-grid-Cell[value="12:00"],
+.react-grid-Cell[value="1:00"],
+.react-grid-Cell[value="2:00"],
+.react-grid-Cell[value="3:00"],
+.react-grid-Cell[value="4:00"],
+.react-grid-Cell[value="5:00"],
+.react-grid-Cell[value="6:00"] {
+  border-left:none;
 }
 
 .example-multiple-targets::after {

@@ -7,6 +7,7 @@ import bookingsUtil from './util/api/bookingsUtil'
 const getBookings = bookingsUtil.getBooking()
 const addBookings = bookingsUtil.addBooking()
 const updateBookings = bookingsUtil.updateBooking()
+const deleteBookings = bookingsUtil.deleteBooking()
 
 function Dashboard (props) {
 
@@ -14,6 +15,7 @@ function Dashboard (props) {
   const [btnCopy, setbtnCopy] = useState("Create New Booking");
 
   const authData = useSelector(state => state.user.data)
+  const selectedBooking = useSelector(state => state.dialog.bookingId)
   const confirm = useSelector(state => state.dialog.confirm)
   const edit = useSelector(state => state.dialog.edit)
   const metaDataObj = useSelector(state => state.booking.metaData)
@@ -40,11 +42,6 @@ function Dashboard (props) {
     setbtnCopy("Create New Booking")
     setValue("confirming");
     let title = window.sessionStorage.getItem('fizzbizz-meetingname')
-    // let user = window.sessionStorage.getItem('fizzbizz-username')
-    // let company = window.sessionStorage.getItem('fizzbizz-companyname')
-
-    // get/create starttime
-    // get/create endtime
     let booking = company
     let start = currentSelection[0].time
     let end = currentSelection[currentSelection.length-1].time
@@ -71,11 +68,6 @@ function Dashboard (props) {
         end_time: end
       }).then((statusArr) => {
         console.log(statusArr)
-        // if (statusArr) {
-        //   for (let status of statusArr) {
-        //     dispatch(status)
-        //   }
-        // }
       })
     })
   };
@@ -88,10 +80,18 @@ function Dashboard (props) {
   };
 
   const handleCancelEdit = () => {
-    // setbtnCopy("Cancel Booking?")
-    // setValue("canceling");
-    // dispatch({ type: 'STATUS_UNBOOKED', slots: currentSelection })
+
     dispatch({ type: 'DASH_DESELECT_BOOKING' })
+  };
+
+  const handleDeleteBooking = (args) => {
+ 
+    deleteBookings({ "company": company, "booking_id": selectedBooking}).then(() => {
+
+      dispatch({ type: 'STATUS_UNBOOKED', slots: currentSelection })
+  
+      dispatch({ type: 'DASH_DELETE_BOOKING' })
+    })
   };
 
   return (
@@ -114,7 +114,7 @@ function Dashboard (props) {
       {confirm && edit &&
         <ConfirmationModal
           message={"Delete Booking?"}
-          onConfirm={(args) => handleCancel(args)}
+          onConfirm={(args) => handleDeleteBooking(args)}
           onCancel={() => handleCancelEdit()}
           isLogin={false}
         />

@@ -6,7 +6,6 @@ function CellStatus(props) {
   const [bookedStatus, setBookedStatus] = useState(props.status)
   const [mouseDown, setMouseDown] = useState(false);
   const metaData = useSelector(state => state.booking.metaData)
-  // const bookingId = useState(state => state.booking)
 
   const { status, id, col, row, who='other', booking , organizer, bookingtitle, time} = props
 
