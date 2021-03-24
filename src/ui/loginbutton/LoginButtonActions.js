@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios'
 import '@metamask/legacy-web3'
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL
+const env = process.env.REACT_APP_API_ENV
 
 
 const deFaultCompany = 'COKE'
@@ -38,7 +39,11 @@ function handleSignMessage(obj) {
       window.web3.fromUtf8(`I am signing my one-time nonce: ${nonce}`),
       pubAddr,
       (err, signature) => {
-        if (err) return reject(err);
+        if (err) {
+          // HANDLE ERROR GRACEFULLY
+          // REDIRECT TO 404 page
+          return reject(err);
+        }
         return resolve({ pubAddr, signature });
       }
     )
@@ -47,7 +52,7 @@ function handleSignMessage(obj) {
 
 function handleAuthenticate({ pubAddr, signature }) {
 
-  return axios.post(`${ API_BASE_URL }/user/authenticate`, {
+  return axios.post(`${ API_BASE_URL }/${env}/user/authenticate`, {
     pubAddr, 
     signature,
     headers: {
@@ -61,29 +66,36 @@ export function loginUser() {
   loginData.localDataUser = sessionStorage.getItem('fizzbizz-username')
   loginData.localDataCompany = sessionStorage.getItem('fizzbizz-companyname')
  
-  // window.web3.personal.sign(web3.fromUtf8("Welcome to FizzBizz Booking!"), web3.eth.coinbase, console.log);  
-  if (!window.web3) window.etherium.enable() 
-  const pubAddr = window.web3.eth.coinbase.toLowerCase()
+  // window.web3.personal.sign(web3.fromUtf8("Welcome to FizzBizz Booking!"), web3.eth.coinbase, console.log); 
+
+  const pubAddr = window.web3.eth.coinbase ? window.web3.eth.coinbase.toLowerCase() : window.ethereum.enable().then(() => window.web3.eth.coinbase.toLowerCase)
   return function(dispatch) {
     // check publicaddress
-    return axios.get(`${API_BASE_URL}/dev/api/v1/user?pubAddr=${pubAddr}&company=${deFaultCompany}`)
+    return axios.get(`${API_BASE_URL}/${env}/api/v1/user?pubAddr=${pubAddr}&company=${deFaultCompany}`)
       .then(res => {
         return (res.status == '200' ? res : createIdentity(pubAddr, deFaultCompany))
       })
       .then(user => {
-        user = JSON.parse(JSON.stringify(user.data))
+        let userObj = JSON.parse(JSON.stringify(user.data))
+        console.log(userObj)
+
+        // TODO: REDIRECT TO 404 IF ANY ERRORS
+        var currentLocation = browserHistory.getCurrentLocation()
+
+        // console.log('userObj ', userObj)
         if (loginData.localDataCompany || loginData.localDataUser) {
-          if (loginData.localDataUser && user.username == 'web3User') user.username = loginData.localDataUser
-          if (loginData.localDataCompany) user.company = loginData.localDataCompany
+          if (loginData.localDataUser && userObj.username == 'web3User') userObj.username = loginData.localDataUser
+          if (loginData.localDataCompany) userObj.company = loginData.localDataCompany
         }
 
-        dispatch(userLoggedIn(user))
+        dispatch(userLoggedIn(userObj))
         dispatch({ type: 'DASH_HIDE_DIALOG' })
 
         // Used a manual redirect here as opposed to a wrapper.
         // This way, once logged in a user can still access the home page.
-        var currentLocation = browserHistory.getCurrentLocation()
-        handleSignMessage(user)
+    
+        
+        handleSignMessage(userObj)
         if ('redirect' in currentLocation.query) {
           return browserHistory.push(decodeURIComponent(currentLocation.query.redirect))
         }

@@ -3,8 +3,12 @@ import ReactDOM from "react-dom";
 import ReactDataGrid from "react-data-grid";
 import { useDispatch, useSelector } from 'react-redux';
 import CellStatus from './CellStatus';
-import './Grid.css';
-// BY THE HOUR! 
+import './css/Grid.css';
+import bookingsUtil from './util/api/bookingsUtil'
+const getBookings = bookingsUtil.getBooking()
+
+const company = sessionStorage.getItem('fizzbizz-companyname')
+
 
 function buildRows(compName, options) {
   console.log('running build rows')
@@ -51,15 +55,18 @@ function buildRows(compName, options) {
 
 
 function Grid() {
-
   const [column, setColumn] = useState(0)
   const [startRow, setStartRow] = useState({idx:1,rowIdx:1})
   const [cellRange, setCellRange] = useState([])
   const availability = useSelector(state => state.status)
   const authData = useSelector(state => state.user.data)
-  const bookings = useSelector(state => state.user.booking)
-  const comp = authData.company.charAt(0) || 'P'
+  const bookings = useSelector(state => state.booking.currentBookings)
+  const comp = authData & authData.company ? authData.company.charAt(0) : sessionStorage.getItem('fizzbizz-companyname') ? sessionStorage.getItem('fizzbizz-companyname').charAt(0) : 'C'
+  const currCompany = sessionStorage.getItem('fizzbizz-companyname')
+  const currUser = sessionStorage.getItem('fizzbizz-username')
   const [gridData, setGridData] = useState(buildRows(comp, {status: availability}))
+
+
   // const dialog = useSelector(state => state.dialog)
   const confirm = useSelector(state => state.dialog.confirm)
 
@@ -71,7 +78,7 @@ function Grid() {
     // width: 120
     // width: '12%'
   };
-
+  
 
   // handle panel selection 
   function selectPanel(e) {
@@ -80,7 +87,7 @@ function Grid() {
       el.classList.remove('panel-selected');
     });
     let bookingId = e.target.getAttribute('booking')
-    let panel = document.querySelectorAll( `[booking=${bookingId}]`);
+    let panel = document.querySelectorAll( `[booking="${bookingId}"]`);
     // change color
     
     panel.forEach((el) => { 
@@ -91,7 +98,7 @@ function Grid() {
 
   function unSelectPanel(cell) {
     let bookingId = cell.getAttribute('booking')
-    let panel = document.querySelectorAll(`[booking=${booking}]`);
+    let panel = document.querySelectorAll(`[booking="${bookingId}"]`);
     // change color
   
     panel.forEach((el) => {
@@ -214,7 +221,7 @@ function Grid() {
   }
 
   return (
-    <div style={{ padding: '5%' }}>
+    <div style={{ paddingTop: '5%' }}>
       <ReactDataGrid
         columns={columns}
         rows={data}

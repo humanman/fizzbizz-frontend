@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import './ConfirmationModal.css';
+import './css/ConfirmationModal.css';
 
 const ConfirmationModal = (props) => {
 
   const {username, companyname, meetingname,  message , isLoginPage, onCancel, onConfirm} = props
   const [userName, setUserName ] = useState("")
-  const [companyName, setCompanyName ] = useState("")
+  const [companyName, setCompanyName ] = useState("COKE")
   const [meetingName, setMeetingName ] = useState("")
   const [checkedStatus, setCheckedStatus] = useState(true)
+  // set initial storage state until I figure out how to handle async useState
 
   function settingHelper(name, val, callback) {
     callback(val)
@@ -16,10 +17,17 @@ const ConfirmationModal = (props) => {
   }
 
   function companyHelper(e) {
+    sessionStorage.setItem(`fizzbizz-companyname`, e.target.value)
     setCompanyName(e.target.value)
     setCheckedStatus(!checkedStatus)
-    return sessionStorage.setItem(`fizzbizz-companyname`, e.target.value)
   }
+
+  useEffect(() => {
+    if (isLoginPage) {
+
+      sessionStorage.setItem(`fizzbizz-companyname`, companyName)
+    }
+  })
 
   return (
     <div className="modal-overlay" >
@@ -63,7 +71,8 @@ const ConfirmationModal = (props) => {
           </div>
         }
         { isLoginPage ?  
-          props.children
+            userName && 
+            props.children
           :
           <div className="btn-wrapper" >
             <button className="confirm-btn" onClick={onCancel}>

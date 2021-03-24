@@ -1,7 +1,6 @@
 import React from 'react'
-
 // Images
-import web3Logo from '../../../img/logo_web3.png'
+import web3Logo from '../../img/logo_web3.png'
 
 const LoginButton = ({ onLoginUserClick , isNav}) => {
 

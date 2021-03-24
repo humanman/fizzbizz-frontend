@@ -1,15 +1,24 @@
 import React, { Component,  } from 'react'
-import ConfirmModal from '../../ConfirmationModal';
+import ConfirmModal from './ConfirmationModal';
 import { useDispatch, useSelector } from 'react-redux';
-import '../../ConfirmationModal.css';
+import bookingsUtil from './util/api/bookingsUtil'
+const getBookings = bookingsUtil.getBooking()
+// import '../../ConfirmationModal.css';
 // UI Components
-import LoginButtonContainer from '../../user/ui/loginbutton/LoginButtonContainer';
+import LoginButtonContainer from './ui/loginbutton/LoginButtonContainer';
 
 
 const Home = () => {
 
-const dispatch = useDispatch()  
+  const dispatch = useDispatch()  
   const isLoggedOut = useSelector(state => (state.user && state.user.data) ? false : true)
+
+  const handleConfirm = (args) => {
+    console.log('a ', args)
+    dispatch(loginUser(args))
+    // const fetched = getBookings()
+    // return getBookings()
+  }
 
   return(
     <main className="container">
@@ -28,7 +37,7 @@ const dispatch = useDispatch()
           companyname={true}
           message={"Welcome to FizzBizz Booking!"}
           isLoginPage={true}
-          handleConfirm={args => dispatch(loginUser(args))}
+          handleConfirm={args => handleConfirm(args)}
         >
           <LoginButtonContainer/>
         </ConfirmModal>

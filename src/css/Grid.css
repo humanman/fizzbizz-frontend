@@ -1,0 +1,18 @@
+.react-grid-HeaderCell {
+  text-align: center;
+}
+
+.react-grid-Cell {
+  border-color: #bbb;
+  border-width: 3px 1px;
+}
+
+.example-multiple-targets::after {
+  content: attr(data-count);
+  display: block;
+}
+
+/* TODO: fix issue through component */
+#root > div > main > div:nth-child(2) > div > div > div > div.react-grid-Header > div > div {
+  height: 65px!important;
+}

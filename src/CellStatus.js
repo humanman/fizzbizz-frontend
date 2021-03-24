@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from 'react-redux';
+import './css/CellStatus.css';
 
 function CellStatus(props) {
   const [bookedStatus, setBookedStatus] = useState(props.status)
@@ -7,7 +8,7 @@ function CellStatus(props) {
   const metaData = useSelector(state => state.booking.metaData)
   // const bookingId = useState(state => state.booking)
 
-  const { status, id, col, row, who='other', booking , organizer, bookingTitle} = props
+  const { status, id, col, row, who='other', booking , organizer, bookingtitle, time} = props
 
   // set a booked status to useSelector so it's tied to a global state
   
@@ -30,10 +31,11 @@ function CellStatus(props) {
         col-name={col}
         row-id={row} 
         organizer={organizer}
-        bookingtitle={bookingTitle}
+        bookingtitle={bookingtitle}
+        time={time}
       >
-        {organizer}
-        {bookingTitle}
+        {/* {organizer} */}
+        {bookingtitle}
       </div>
   )
 }
