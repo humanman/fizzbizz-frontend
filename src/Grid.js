@@ -87,12 +87,18 @@ function Grid() {
       el.classList.remove('panel-selected');
     });
     let bookingId = e.target.getAttribute('booking')
+    let isEditable = e.target.getAttribute('organizer') == currUser
     let panel = document.querySelectorAll( `[booking="${bookingId}"]`);
     // change color
     
     panel.forEach((el) => { 
       el.classList.add('panel-selected') 
     })
+
+    if (isEditable) {
+      dispatch({ type: 'DASH_SELECT_BOOKING' })
+    }
+    
     // if organizer is current user then offer cancel (for now)
   }
 

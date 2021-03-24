@@ -1,5 +1,6 @@
 const initialState = {
-  confirm: true
+  confirm: true,
+  edit: false
 }
 
 const dashboardReducer = (state = initialState, action) => {
@@ -13,6 +14,19 @@ const dashboardReducer = (state = initialState, action) => {
   //     dialog: {}
   //   })
   // }
+  if (action.type === 'DASH_SELECT_BOOKING') {
+    return Object.assign({}, state, {
+      confirm: true,
+      edit: true
+    })
+  }
+
+  if (action.type === 'DASH_DESELECT_BOOKING') {
+    return Object.assign({}, state, {
+      confirm: false,
+      edit: false
+    })
+  }
 
   if (action.type === 'DASH_HIDE_DIALOG') {
     return Object.assign({}, state, {

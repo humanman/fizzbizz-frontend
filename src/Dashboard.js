@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import Grid from './Grid';
-// import BookingForm from '../../BookingForm';
-// import ConfirmModal from '../../ConfirmationModal';
-// import '../../ConfirmationModal.css';
+import './css/Dashboard.css'
 import ConfirmationModal from './ConfirmationModal';
 import bookingsUtil from './util/api/bookingsUtil'
 const getBookings = bookingsUtil.getBooking()
@@ -17,27 +15,13 @@ function Dashboard (props) {
 
   const authData = useSelector(state => state.user.data)
   const confirm = useSelector(state => state.dialog.confirm)
+  const edit = useSelector(state => state.dialog.edit)
   const metaDataObj = useSelector(state => state.booking.metaData)
   const currentSelection = useSelector(state => state.booking.currentSelection)
   const dispatch = useDispatch()
   const [prompt, setPrompt] = useState('Confirm Booking')
 
 
-  // const onCloseModal = () => {
-  //   dispatch({ type: 'DASH_HIDE_DIALOG' })
-  //   setOpen(false);
-  // }
-
-  // const onOpenModal = () => {
-  //   dispatch({ type: 'DASH_SHOW_DIALOG' })
-  //   setOpen(true);
-  // }
-
-  // const handleSubmit = (e) => {
-  //   (e).stopPropagation()
-  //   setbtnCopy("Create New Booking")
-  //   setValue("confirming");
-  // };
   const user = window.sessionStorage.getItem('fizzbizz-username')
   const company = window.sessionStorage.getItem('fizzbizz-companyname')
 
@@ -65,7 +49,8 @@ function Dashboard (props) {
     let start = currentSelection[0].time
     let end = currentSelection[currentSelection.length-1].time
     let roomChar = booking.charAt(0)
-    let roomName = roomChar + (currentSelection[0] < 10 ? 0 : "")
+    let roomName = roomChar + (currentSelection[0].col < 10 ? 0 : "")
+    console.log(roomName)
     // bookingid will be concactenation of company and datalookups of first to last 
     let pendingBookings = currentSelection.map(slot => {
       booking += '|' + slot.id
@@ -80,26 +65,33 @@ function Dashboard (props) {
         booking_id: booking,
         company: company,
         booking_name: title,
-        room_id: roomName,
+        room_id: String(currentSelection[0].col),
         organizer_id: user,
         start_time: start,
         end_time: end
       }).then((statusArr) => {
         console.log(statusArr)
-        if (statusArr) {
-          for (let status of statusArr) {
-            dispatch(status)
-          }
-        }
+        // if (statusArr) {
+        //   for (let status of statusArr) {
+        //     dispatch(status)
+        //   }
+        // }
       })
     })
   };
 
   const handleCancel = () => {
-    setbtnCopy("Create New Booking")
+    setbtnCopy("Cancel Booking?")
     setValue("canceling");
     dispatch({ type: 'STATUS_UNBOOKED', slots: currentSelection })
     dispatch({ type: 'DASH_HIDE_DIALOG' })
+  };
+
+  const handleCancelEdit = () => {
+    // setbtnCopy("Cancel Booking?")
+    // setValue("canceling");
+    // dispatch({ type: 'STATUS_UNBOOKED', slots: currentSelection })
+    dispatch({ type: 'DASH_DESELECT_BOOKING' })
   };
 
   return (
@@ -110,7 +102,7 @@ function Dashboard (props) {
           <p><strong>Congratulations {authData.username}!</strong> If you're seeing this page, you've logged in with Web3 successfully.</p>
         </div>
       </div>
-      {confirm && 
+      {confirm && !edit &&
         <ConfirmationModal
           meetingname={true}
           message={prompt}
@@ -119,9 +111,31 @@ function Dashboard (props) {
           isLogin={false}
         />
       }
+      {confirm && edit &&
+        <ConfirmationModal
+          message={"Delete Booking?"}
+          onConfirm={(args) => handleCancel(args)}
+          onCancel={() => handleCancelEdit()}
+          isLogin={false}
+        />
+      }
       {!confirm && 
         <Grid />
       }
+      <div className="colors">
+        <div className="color-type blocked">
+          <p>BLOCKED</p>
+          <div></div>
+        </div>
+        <div className="color-type pending">
+          <p>PENDING</p>
+          <div></div>
+        </div>
+        <div className="color-type editable">
+          <p>EDITABLE</p>
+          <div></div>
+        </div>
+      </div>
     </main>
   )
   

@@ -17,20 +17,22 @@ const timeMap = {
 }
 
 const handleCurrentBookings = (fetchedBookings) => {
-  
-  if (fetchedBookings == undefined) return false
+  let obj = JSON.parse(JSON.stringify(fetchedBookings))
+
+  console.log('fetc ', fetchedBookings[0], typeof fetchedBookings)
+  if (fetchedBookings == undefined || fetchedBookings.length == 0) return false
   const company = window.sessionStorage.getItem('fizzbizz-companyname')
   const currentUser = window.sessionStorage.getItem('fizzbizz-username')
   let outputArr = []
   for (let booking of fetchedBookings) {
-    
+    if (!booking.hasOwnProperty('booking_id')) return false
     let dispatchObj = {}
     let bookingId = booking.booking_id
     let cellIds = booking.booking_id.split('|').slice(1)
   
     if (company == booking.company) {
 
-      let roomId = booking.room_id
+      let roomId = `${ booking.room_id}`
       let roomName = `col${roomId}`
       let metadata = {}
       metadata.title = booking.booking_name
@@ -50,7 +52,7 @@ const handleCurrentBookings = (fetchedBookings) => {
         row = parseInt(row)
         col = parseInt(col)
 
-        tempObj.id = lookup
+        tempObj.id = `${lookup}`
         tempObj.status = 'booked'
         tempObj.col = col
         tempObj.row = row
@@ -87,12 +89,14 @@ const addBooking = () => (req) => {
   // try {
     return axios.post(url, {
         booking_id: req.booking_id,
-        booking_name: req.organizer_id, 
+        booking_name: req.booking_name, 
+        organizer_id: req.organizer_id, 
         company : req.company,
         room_id: req.room_id,
         start_time: req.start_time,
         end_time: req.end_time
       })
+      .then(response => response.config)
       .then(response => response ? handleCurrentBookings(response.data) : null)
         // should be a fetch all response to update current bookings
         // possibly need to transform into something status can use
@@ -115,6 +119,7 @@ const getBooking = () => (req={company, booking_id:null}) => {
       "booking_id": req.booking_id,
       "company": req.company
     }})
+    // .then(response => JSON.parse(JSON.stringify(response.data)))
     .then(response => response ? handleCurrentBookings(response.data) : null)
       // should be a fetch all response to update current bookings
       // possibly need to transform into something status can use

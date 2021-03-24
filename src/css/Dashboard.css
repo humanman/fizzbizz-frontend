@@ -1,0 +1,37 @@
+.colors {
+  margin-top: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 250px;
+  height: 50px;
+
+}
+
+.color-type {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.color-type p {
+  font-family: 'Oswald', 'Arial Narrow', sans-serif;
+}
+
+.color-type div {
+  width: 50px;
+  height: 50px;
+}
+
+.blocked {
+  background: rgb(113, 114, 116);
+}
+
+.pending {
+  background: rgb(239, 243, 13);
+}
+
+.editable {
+  background: rgb(57, 226, 147);
+}
+
