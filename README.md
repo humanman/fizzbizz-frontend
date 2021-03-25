@@ -23,7 +23,7 @@
 
 
 ## CHECK OUT THE DEMO!
- - [FizzBizz Dev App!](http://unkempt-advice.surge.sh/dashboard)
+ - [FizzBizz Dev App!](http://unkempt-advice.surge.sh)
 
 ## Notes
 
