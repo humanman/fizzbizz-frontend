@@ -7,7 +7,7 @@
 - This is a full stack app built in under 7 days.
 - This is a single day booking app that imagines a scenario of 2 companies sharing meeting rooms.
 
-  - users log in with their Ethereum wallet using the [https://metamask.io/](MetaMask) browser extension
+  - users log in with their Ethereum wallet using the [MetaMask](https://metamask.io/) browser extension
 
   - User chooses their company (COKE or PEPSI) then enters their name
   - Once on the user successfully logs in, they will see a simple dashboard, which allows them to book rooms (10 for each company) by the hour.
@@ -19,11 +19,11 @@
 
   - I will be cleaning up and enhancing now that I have the time to sit and read through the documentation a bit more - especially blockchain decetralized identity (blockchain is the future!)
 
-  - Check out the backend I created during this mini sprint over at [https://github.com/humanman/fizzbizz-backend](FizzBizz) Back End
+  - Check out the backend I created during this mini sprint over at [FizzBizz Back End](https://github.com/humanman/fizzbizz-backend)
 
 
 ## CHECK OUT THE DEMO!
- - [http://unkempt-advice.surge.sh/dashboard](FizzBizz) Dev App!
+ - [FizzBizz Dev App!](http://unkempt-advice.surge.sh/dashboard)
 
 ## Notes
 
