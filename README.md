@@ -19,11 +19,11 @@
 
   - I will be cleaning up and enhancing now that I have the time to sit and read through the documentation a bit more - especially blockchain decetralized identity (blockchain is the future!)
 
-  - Check out the backend I created during this mini sprint over at [https://github.com/humanman/fizzbizz-backend](FizzBizz Back End)
+  - Check out the backend I created during this mini sprint over at [https://github.com/humanman/fizzbizz-backend](FizzBizz) Back End
 
 
 ## CHECK OUT THE DEMO!
- - [http://unkempt-advice.surge.sh/dashboard](FizzBizz Dev App!)
+ - [http://unkempt-advice.surge.sh/dashboard](FizzBizz) Dev App!
 
 ## Notes
 
