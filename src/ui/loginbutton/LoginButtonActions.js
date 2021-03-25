@@ -65,43 +65,57 @@ export function loginUser() {
   let loginData =  {}
   loginData.localDataUser = sessionStorage.getItem('fizzbizz-username')
   loginData.localDataCompany = sessionStorage.getItem('fizzbizz-companyname')
- 
+  try {
+    const pubAddr = window.web3.eth.coinbase ? window.web3.eth.coinbase.toLowerCase() : window.ethereum.enable().then(() => window.web3.eth.coinbase.toLowerCase)
+    return function (dispatch) {
+      // check publicaddress
+      return axios.get(`${API_BASE_URL}/${env}/api/v1/user?pubAddr=${pubAddr}&company=${deFaultCompany}`)
+        .then(res => {
+          return (res.status == '200' ? res : createIdentity(pubAddr, deFaultCompany))
+        })
+        .then(user => {
+          let userObj = JSON.parse(JSON.stringify(user.data))
+          console.log(userObj)
+
+          // TODO: REDIRECT TO 404 IF ANY ERRORS
+          var currentLocation = browserHistory.getCurrentLocation()
+
+          // console.log('userObj ', userObj)
+          if (loginData.localDataCompany || loginData.localDataUser) {
+            if (loginData.localDataUser && userObj.username == 'web3User') userObj.username = loginData.localDataUser
+            if (loginData.localDataCompany) userObj.company = loginData.localDataCompany
+          }
+
+          dispatch(userLoggedIn(userObj))
+          dispatch({ type: 'DASH_HIDE_DIALOG' })
+
+          return browserHistory.push('/dashboard')
+        })
+      // .then(handleAuthenticate)
+    }
+
+  } 
+  catch {
+    window.alert("no ethereum wallet detected. For demo purposes you will be redirected to the dashboard as if you were a web3 user")
+
+    return function (dispatch) {
+    
+      let userObj = {
+        username: loginData.localDataUser,
+        nonce: 'xxx',
+        email: 'web3user',
+        company: loginData.localDataCompany
+      }
+      dispatch(userLoggedIn(userObj))
+      dispatch({ type: 'DASH_HIDE_DIALOG' })
+
+      return browserHistory.push('/dashboard')
+    }
+  } 
+  
+
   // window.web3.personal.sign(web3.fromUtf8("Welcome to FizzBizz Booking!"), web3.eth.coinbase, console.log); 
 
-  const pubAddr = window.web3.eth.coinbase ? window.web3.eth.coinbase.toLowerCase() : window.ethereum.enable().then(() => window.web3.eth.coinbase.toLowerCase)
-  return function(dispatch) {
-    // check publicaddress
-    return axios.get(`${API_BASE_URL}/${env}/api/v1/user?pubAddr=${pubAddr}&company=${deFaultCompany}`)
-      .then(res => {
-        return (res.status == '200' ? res : createIdentity(pubAddr, deFaultCompany))
-      })
-      .then(user => {
-        let userObj = JSON.parse(JSON.stringify(user.data))
-        console.log(userObj)
+ 
 
-        // TODO: REDIRECT TO 404 IF ANY ERRORS
-        var currentLocation = browserHistory.getCurrentLocation()
-
-        // console.log('userObj ', userObj)
-        if (loginData.localDataCompany || loginData.localDataUser) {
-          if (loginData.localDataUser && userObj.username == 'web3User') userObj.username = loginData.localDataUser
-          if (loginData.localDataCompany) userObj.company = loginData.localDataCompany
-        }
-
-        dispatch(userLoggedIn(userObj))
-        dispatch({ type: 'DASH_HIDE_DIALOG' })
-
-        // Used a manual redirect here as opposed to a wrapper.
-        // This way, once logged in a user can still access the home page.
-    
-        
-        handleSignMessage(userObj)
-        if ('redirect' in currentLocation.query) {
-          return browserHistory.push(decodeURIComponent(currentLocation.query.redirect))
-        }
-
-        return browserHistory.push('/dashboard')
-      })
-      // .then(handleAuthenticate)
-  }
 }
