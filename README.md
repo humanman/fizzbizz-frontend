@@ -21,6 +21,10 @@
 
   - Check out the backend I created during this mini sprint over at [https://github.com/humanman/fizzbizz-backend](FizzBizz Back End)
 
+
+## CHECK OUT THE DEMO!
+ - [unkempt-advice.surge.sh](FizzBizz Dev App!)
+
 ## Notes
 
 - In order to use this site you MUST have the MetaMask extension installed on your Chrome or FireFox browser. Thise Web3 feature is stable on desktop only
