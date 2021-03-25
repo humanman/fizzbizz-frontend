@@ -71,7 +71,7 @@ export function loginUser() {
       // check publicaddress
       return axios.get(`${API_BASE_URL}/${env}/api/v1/user?pubAddr=${pubAddr}&company=${deFaultCompany}`)
         .then(res => {
-          return (res.status == '200' ? res : createIdentity(pubAddr, deFaultCompany))
+          return (res && res.status == '200' ? res : createIdentity(pubAddr, loginData.localDataCompany))
         })
         .then(user => {
           let userObj = JSON.parse(JSON.stringify(user.data))
