@@ -29,9 +29,9 @@ function Dashboard (props) {
 
   useEffect(() => {
     getBookings({company, booking_id:null}).then((statusArr) => {
-      console.log(statusArr)
       if (statusArr) {
         for (let status of statusArr) {
+          dispatch({type: 'BOOKING_CREATE', bookingId: status.metadata.booking, details: status.metadata})
           dispatch(status)
         }
       }
@@ -57,17 +57,21 @@ function Dashboard (props) {
 
     dispatch({ type: 'STATUS_HOLD', slots: pendingBookings , metadata:{title, user, booking, start, end }})
     dispatch({ type: 'DASH_HIDE_DIALOG' })
+    const details = {
+      booking_id: booking,
+      company: company,
+      booking_name: title,
+      room_id: String(currentSelection[0].col),
+      organizer_id: user,
+      start_time: start,
+      end_time: end
+    }
+    dispatch({type: 'BOOKING_CREATE', bookingId: booking, details })
     setTimeout(() => {
-      addBookings({ 
-        booking_id: booking,
-        company: company,
-        booking_name: title,
-        room_id: String(currentSelection[0].col),
-        organizer_id: user,
-        start_time: start,
-        end_time: end
-      }).then((statusArr) => {
+      addBookings(details).then((statusArr) => {
         console.log(statusArr)
+        // dispatch booking to a map in bookingReducer
+        // later when selecting a panel access the booking map to display details from addBookings call
       })
     })
   };
@@ -109,6 +113,8 @@ function Dashboard (props) {
           onConfirm={(args) => handleConfirm(args)}
           onCancel={() => handleCancel()}
           isLogin={false}
+          cancel="Cancel"
+          confirm="Confirm"
         />
       }
       {confirm && edit &&
@@ -117,6 +123,8 @@ function Dashboard (props) {
           onConfirm={(args) => handleDeleteBooking(args)}
           onCancel={() => handleCancelEdit()}
           isLogin={false}
+          cancel="No, Keep It"
+          confirm="Yes, Cancel Meeting"
         />
       }
       {!confirm && 

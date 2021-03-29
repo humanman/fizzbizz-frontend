@@ -71,7 +71,7 @@ function Grid() {
 
   const defaultColumnProperties = {
     // width: 120
-    // width: '12%'
+    paddingLeft: '5px'
   };
 
 
@@ -84,13 +84,11 @@ function Grid() {
     let bookingId = e.target.getAttribute('booking')
 
     // build currentselection that can dispatch to store to update current selection so if use deletes, the selection is available
-    console.log('booking ', bookingId)
     let isEditable = e.target.getAttribute('organizer') == currUser
     let panel = document.querySelectorAll( `[booking="${bookingId}"]`);
     // change color
     let panelDetails = []
     panel.forEach((el) => { 
-      console.log('element  ',el.getAttribute('row-id'))
       el.classList.add('panel-selected') 
       let row = el.getAttribute('row-id')
       let key = `col${el.getAttribute('col-name')}`
@@ -106,7 +104,7 @@ function Grid() {
       })
   
     }
-
+    console.log('details ', bookings[bookingId])
   }
 
   function unSelectPanel(cell) {
@@ -131,7 +129,7 @@ function Grid() {
 
   const cellHelpers = { formatter: AvailabilityFormatter }
   const columns = [
-      { name: 'TIME',key: 'col0'},
+      { name: 'TIME', key: 'col0'},
       { name: `${comp}O1`, key: 'col1' , ...cellHelpers},
       { name: `${comp}O2`, key: 'col2' , ...cellHelpers},
       { name: `${comp}O3`, key: 'col3' , ...cellHelpers},
@@ -220,6 +218,8 @@ function Grid() {
 
       // return confirmBookingRequest()
     }
+
+    // TODO: on click gather time start/end from first cell and display in confirmation modal
 
   }
 

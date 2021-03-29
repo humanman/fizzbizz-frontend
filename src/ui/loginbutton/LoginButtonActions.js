@@ -62,25 +62,50 @@ function handleAuthenticate({ pubAddr, signature }) {
 }
   
 export function loginUser() {
+  var currentLocation = browserHistory.getCurrentLocation()
+  let pubAddr = window.web3.eth.coinbase ? window.web3.eth.coinbase.toLowerCase() : null
+  console.log(pubAddr)
+  if (!pubAddr) {
+    alert('we are having trouble acessing your public address which is required to login')
+    window.location.reload()
+  }
   let loginData =  {}
   loginData.localDataUser = sessionStorage.getItem('fizzbizz-username')
   loginData.localDataCompany = sessionStorage.getItem('fizzbizz-companyname')
-  try {
-    const pubAddr = window.web3.eth.coinbase ? window.web3.eth.coinbase.toLowerCase() : window.ethereum.enable().then(() => window.web3.eth.coinbase.toLowerCase)
-    return function (dispatch) {
+
+    return function(dispatch) {
       // check publicaddress
       return axios.get(`${API_BASE_URL}/${env}/api/v1/user?pubAddr=${pubAddr}&company=${deFaultCompany}`)
-        .then(res => {
-          return (res && res.status == '200' ? res : createIdentity(pubAddr, loginData.localDataCompany))
-        })
         .then(user => {
           let userObj = JSON.parse(JSON.stringify(user.data))
           console.log(userObj)
+          if (userObj == 'new user') {
+            createIdentity(pubAddr, loginData.localDataCompany).then((newUser) => {
+              // TODO: REDIRECT TO 404 IF ANY ERRORS
+              userObj = JSON.parse(JSON.stringify(newUser.data))
 
-          // TODO: REDIRECT TO 404 IF ANY ERRORS
-          var currentLocation = browserHistory.getCurrentLocation()
+              // console.log('userObj ', userObj)
+  
 
-          // console.log('userObj ', userObj)
+              // handleSignMessage(userObj).then((id) => {
+              //   console.log('sign id ',id)
+              // })
+
+              // dispatch(userLoggedIn(userObj))
+              // dispatch({ type: 'DASH_HIDE_DIALOG' })
+
+              // return browserHistory.push('/dashboard')
+            })
+          } else {
+     
+
+            // TODO: REDIRECT TO 404 IF ANY ERRORS
+
+          }
+          handleSignMessage(userObj).then((id) => {
+            console.log('sign id ', id)
+          })
+
           if (loginData.localDataCompany || loginData.localDataUser) {
             if (loginData.localDataUser && userObj.username == 'web3User') userObj.username = loginData.localDataUser
             if (loginData.localDataCompany) userObj.company = loginData.localDataCompany
@@ -90,28 +115,43 @@ export function loginUser() {
           dispatch({ type: 'DASH_HIDE_DIALOG' })
 
           return browserHistory.push('/dashboard')
+
         })
-      // .then(handleAuthenticate)
     }
+    // if (!pubAddr) {
 
-  } 
-  catch {
-    window.alert("no ethereum wallet detected. For demo purposes you will be redirected to the dashboard as if you were a web3 user")
+    //   alert('we are having trouble acessing your public address which is required to login')
+    //   return window.ethereum.enable().then(() => {
+    //       // pubAddr = window.web3.eth.coinbase.toLowerCase()
+    //       web3.personal.sign(nonce, web3.eth.coinbase, fetchUser);
+ 
 
-    return function (dispatch) {
-    
-      let userObj = {
-        username: loginData.localDataUser,
-        nonce: 'xxx',
-        email: 'web3user',
-        company: loginData.localDataCompany
-      }
-      dispatch(userLoggedIn(userObj))
-      dispatch({ type: 'DASH_HIDE_DIALOG' })
+    //     })
+    //   // .then(handleAuthenticate)
+    // } else if (pubAddr) {
+    //   fetchUser()
 
-      return browserHistory.push('/dashboard')
-    }
-  } 
+    // } else {
+    //   window.alert("no ethereum wallet detected. For demo purposes you will be redirected to the dashboard as if you were a web3 user")
+
+    //   return function (dispatch) {
+
+    //     let userObj = {
+    //       username: loginData.localDataUser,
+    //       nonce: 'xxx',
+    //       email: 'web3user',
+    //       company: loginData.localDataCompany
+    //     }
+    //     dispatch(userLoggedIn(userObj))
+    //     dispatch({ type: 'DASH_HIDE_DIALOG' })
+
+    //     return browserHistory.push('/dashboard')
+    //   }
+    // }
+
+
+  
+
   
 
   // window.web3.personal.sign(web3.fromUtf8("Welcome to FizzBizz Booking!"), web3.eth.coinbase, console.log); 

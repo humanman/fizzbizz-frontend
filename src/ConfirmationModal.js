@@ -4,7 +4,7 @@ import './css/ConfirmationModal.css';
 
 const ConfirmationModal = (props) => {
 
-  const {username, companyname, meetingname,  message , isLoginPage, onCancel, onConfirm} = props
+  const {username, companyname, meetingname,  message , isLoginPage, onCancel, onConfirm, cancel, confirm} = props
   const [userName, setUserName ] = useState("")
   const [companyName, setCompanyName ] = useState("COKE")
   const [meetingName, setMeetingName ] = useState("")
@@ -37,16 +37,20 @@ const ConfirmationModal = (props) => {
           <> 
             <p className="checkbox-header">Please Choose A Company</p>
             <div className="checkbox-container">
-              <label htmlFor="companyname" className="container">
-                <p>COKE</p>
-              <input onChange={e => companyHelper(e)} type="radio" className="checkbox" name="companyname" value="COKE" checked={checkedStatus}/>
-                <span className="checkmark"></span>
+              <label className="radio radio-gradient">
+                <span className="radio__input">
+                  <input type="radio" name="radio" value="COKE" onChange={e => companyHelper(e)} checked={checkedStatus}/>
+                    <span className="radio__control"></span>
+                </span>
+                  <span className="radio__label">COKE</span>
               </label>
-              <br/>
-              <label htmlFor="companyname" className="container">
-                <p>PEPSI</p>
-              <input onChange={e => companyHelper(e)} type="radio" className="checkbox" name="companyname" value="PEPSI" checked={!checkedStatus} />
-                <span className="checkmark"></span>
+
+              <label className="radio radio-before">
+                <span className="radio__input">
+                  <input type="radio" name="radio" value="PEPSI" onChange={e => companyHelper(e)} checked={!checkedStatus}/>
+                    <span className="radio__control"></span>
+                </span>
+                  <span className="radio__label">PEPSI</span>
               </label>
               <br/>
             </div>
@@ -76,13 +80,19 @@ const ConfirmationModal = (props) => {
           :
           <div className="btn-wrapper" >
             <button className="confirm-btn" onClick={onCancel}>
-              Cancel 
+              {cancel} 
             </button>
             <button className="confirm-btn" onClick={onConfirm}>
-              Confirm
+              {confirm}
             </button>
           </div>
         }
+        {/* {
+          isViewOnly &&
+          <button className="confirm-btn" onClick={onConfirm}>
+            "Ok"
+          </button>
+        } */}
       </div>
     </div>
   )

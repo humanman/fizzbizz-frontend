@@ -1,145 +1,192 @@
-  /* .modal-outer-wrapper {
-    color: #fff;
-    background: #0c1a2b;
-    font-family: 'Oswald', 'Arial Narrow', sans-serif;
-  }
+.modal-overlay {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background:rgba(12, 26, 43, 0.9);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  .modal-inner-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* margin: auto;
-    width: 30vw;
-    padding-bottom: 15px; */
-  /* }
+.customModal, .modal-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: auto;
+  max-width: 500px;
+  width: 100%;
+  color: #fff;
+  background:rgba(12, 26, 43, 0.9);
+  font-family: 'Oswald', 'Arial Narrow', sans-serif;
+  padding: 25px;
+  z-index: 10;
+}
 
-  .modal-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  } */ 
+.modal-container label p {
+  text-align: center;
+}
 
-  /* .customOverlay {
-    width: 100vw;
-    height: 100vh;
-    background: rgba(36, 123, 160, 0.7);
-  } */
+.modal-container input {
+  background-color: rgba(166, 173, 182, 0.4);
+  color:#fff
+}
 
-  .modal-overlay {
-    width: 100vw;
-    height: 100vh;
-    position: fixed;
-    top: 0;
-    left: 0;
-    background:rgba(12, 26, 43, 0.9);
-    z-index: 1000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+.modal-container > p {
+  margin: 10px;
+}
 
-  .customModal, .modal-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    margin: auto;
-    max-width: 500px;
-    width: 100%;
-    color: #fff;
-    background:rgba(12, 26, 43, 0.9);
-    font-family: 'Oswald', 'Arial Narrow', sans-serif;
-    padding: 25px;
-    z-index: 10;
-  }
-  
-  .modal-container label p {
-    text-align: center;
-  }
+.checkbox-container {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
 
-  .modal-container input {
-    background-color: rgba(166, 173, 182, 0.4);
-    color:#fff
-  }
+.checbox-header {
+  justify-self: center;
+  width: 100%;
+}
 
-  .modal-container > p {
-    margin: 10px;
-  }
+.input-container {
+  margin-bottom: 15px;
+}
 
-  .checkbox-container {
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-  }
-  
-  .checbox-header {
-    justify-self: center;
-    width: 100%;
-  }
+.modal-container .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
 
-  .input-container {
-    margin-bottom: 15px;
-  }
+.modal-container .container > p {
+  margin-right: 10px;
+}
 
-  .modal-container .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-  }
+.btn-wrapper {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-  .modal-container .container > p {
-    margin-right: 10px;
-  }
+.confirm-btn {
+  background: #0c1a2b;
+  color: #fff;
+  padding: 5px;
+  border: none;
+  align-self: flex-end;
+  padding: 10px;
+}
 
-  .btn-wrapper {
-    margin-top: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+.confirm-btn:hover {
+  background: #233e5e;
+  outline: 0;
+}
 
-  .confirm-btn {
-    background: #0c1a2b;
-    color: #fff;
-    padding: 5px;
-    border: none;
-    align-self: flex-end;
-    padding: 10px;
-  }
+.confirm-btn:focus {
+  outline: 0;
+}
 
-  .confirm-btn:hover {
-    background: #233e5e;
-    outline: 0;
-  }
-  
-  .confirm-btn:focus {
-    outline: 0;
-  }
+.close-icon {
+  color: #fff;
+  fill: #fff;
+}
 
-  .close-icon {
-    color: #fff;
-    fill: #fff;
-  }
+.info-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 
-  .info-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
+.m-hide {
+  visibility: hidden;
+}
 
-  .m-hide {
-    visibility: hidden;
-  }
+.m-show {
+  visibility: visible;
+}
 
-  .m-show {
-    visibility: visible;
-  }
+/* radio */
+:root {
+  --color: #fff;
+}
 
-  
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
 
+.radio {
+  display: flex;
+  font-size: 1.5rem;
+  color: var(--color);
+  margin: 0 5px;
+}
+
+.radio:focus-within .radio__label {
+  transform: scale(1.05);
+  opacity: 1;
+}
+
+.radio__label {
+  line-height: 1;
+  transition: 180ms all ease-in-out;
+  opacity: 0.8;
+}
+
+.radio__input {
+  display: flex;
+}
+
+.radio__input input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.radio__input input:focus + .radio__control {
+  box-shadow: 0 0 0 0.05em #fff, 0 0 0.15em 0.1em currentColor;
+}
+
+.radio-gradient input:checked + .radio__control {
+  background: radial-gradient(currentcolor 50%, rgba(255, 0, 0, 0) 51%);
+}
+
+.radio-before .radio__control {
+  display: grid;
+  place-items: center;
+}
+
+.radio-before input + .radio__control::before {
+  content: "";
+  width: 0.5em;
+  height: 0.5em;
+  box-shadow: inset 0.5em 0.5em currentColor;
+  border-radius: 50%;
+  transition: 180ms transform ease-in-out;
+  transform: scale(0);
+}
+
+.radio-before input:checked + .radio__control::before {
+  transform: scale(1);
+}
+
+.radio__control {
+  margin: 0 5px;
+  display: block;
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  border: 0.1em solid currentColor;
+  transform: translateY(-0.05em);
+}
+
+/* animation for v2 */
 
 @keyframes customEnterOverlayAnimation {
   0% {

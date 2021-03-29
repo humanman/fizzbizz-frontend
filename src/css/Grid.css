@@ -4,8 +4,9 @@
 
 .react-grid-Cell {
   border-color: #bbb;
-  border-width: 3px 1px;
+  border-width: 0 1px;
   border-left: 1px solid #888;
+  padding: 0 0 0 5px!important;
 }
 
 .react-grid-Cell[value="9:00"],
